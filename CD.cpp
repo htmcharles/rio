@@ -1,37 +1,36 @@
 #include <iostream>
+#include <unordered_set>
+
 using namespace std;
 
 int main() {
-    int N, M;
     while (true) {
-        cin >> N >> M;
-        if (N == 0 && M == 0) {
-            break;
+        int n, m;
+        cin >> n >> m;
+
+        // Check for termination condition
+        if (n == 0 && m == 0) break;
+
+        unordered_set<int> jackCDs;
+        int catalogNumber;
+
+        // Read Jack's CDs
+        for (int i = 0; i < n; ++i) {
+            cin >> catalogNumber;
+            jackCDs.insert(catalogNumber);
         }
 
-        int jack_cds[100], jill_cds[100];
-        bool common[100] = {false};
-
-        for (int i = 0; i < N; i++) {
-            cin >> jack_cds[i];
-        }
-
-        for (int i = 0; i < M; i++) {
-            cin >> jill_cds[i];
-        }
-
-        int common_count = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (jack_cds[i] == jill_cds[j] && !common[i]) {
-                    common_count++;
-                    common[i] = true;
-                    break;
-                }
+        // Read Jill's CDs and count matches
+        int commonCount = 0;
+        for (int i = 0; i < m; ++i) {
+            cin >> catalogNumber;
+            if (jackCDs.find(catalogNumber) != jackCDs.end()) {
+                ++commonCount;
             }
         }
 
-        cout << common_count << endl;
+        // Output the number of common CDs
+        cout << commonCount << endl;
     }
 
     return 0;
