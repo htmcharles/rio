@@ -1,44 +1,54 @@
-#include <iostream>
-#include <vector>
-#include <set>
-
+#include <bits/stdc++.h>
 using namespace std;
 
+// Fast I/O techniques
+void fast_io() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+
 int main() {
-    int N;
-    cin >> N; // Read the number of recipes
-
+    fast_io();
+    
+    int N;  // Number of recipes
+    cin >> N;
+    
     vector<vector<int>> recipes(N);
-    for (int i = 0; i < N; ++i) {
+    set<int> used;  // Using a set to track originally used ingredients
+    int result = 0;
+
+    // Reading input and storing recipes
+    for (int i = 0; i < N; i++) {
         int M;
-        cin >> M; // Read the number of ingredients for each recipe
+        cin >> M;
         recipes[i].resize(M);
-        for (int j = 0; j < M; ++j) {
-            cin >> recipes[i][j]; // Read each ingredient
+        for (int j = 0; j < M; j++) {
+            cin >> recipes[i][j];
         }
     }
 
-    set<int> usedIngredients; // To track used ingredients
-    int concoctedCount = 0; // To count how many recipes can be concocted
+    // Process each recipe
+    for (int i = 0; i < N; i++) {
+        bool can_concoct = false;  // Assume the recipe cannot be concocted
 
-    for (const auto& recipe : recipes) {
-        bool canConcoct = true;
-        for (int ingredient : recipe) {
-            if (usedIngredients.count(ingredient) > 0) {
-                canConcoct = false; // If any ingredient is already used
-                break;
+        // Check if at least one ingredient is unused
+        for (int ing : recipes[i]) {
+            if (!used.count(ing)) {  // If any ingredient has not been used before
+                can_concoct = true;
+                break;  // No need to check further
             }
         }
-        if (canConcoct) {
-            // If we can concoct this recipe, mark all its ingredients as used
-            for (int ingredient : recipe) {
-                usedIngredients.insert(ingredient);
+        
+        // If the recipe can be concocted, mark the ingredients as used
+        if (can_concoct) {
+            result++;  // This recipe can be concocted
+            for (int ing : recipes[i]) {
+                used.insert(ing);  // Insert into set
             }
-            concoctedCount++; // Increment the count of concocted recipes
         }
     }
 
-    cout << concoctedCount << endl; // Output the result
+    cout << result << "\n";  // Output the number of concoctable recipes
     return 0;
 }
 

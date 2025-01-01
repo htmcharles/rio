@@ -1,48 +1,125 @@
-#include <iostream>
-#include <vector>
-#include <string>
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <cmath>
+
+#define M_PI 3.14159265358979323846
+
+
 using namespace std;
+using namespace __gnu_pbds;
+
+typedef long long ll;
+typedef long double ld;
+typedef unsigned int uint;
+typedef unsigned long long ull;
+
+const ld  pi   = 4.0*atanl(1.0);
+const int iinf = 1e9 + 10;
+const ll  inf  = 1e18 + 10;
+const int mod  = 1000000007;
+const ld  prec = .000001;
+
+#define enld endl
+#define endl '\n'
+#define pb push_back
+#define debug(x) cout<<#x<<" -> "<<x<<'\n'
+#define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
+#define uni(x) (x).erase(unique(all(x)), (x).end())
+#define rep(i, n) for (ll i = 0; i < (ll)(n); ++i)
+#define rep1(i, n) for (ll i = 1; i <= (ll)(n); ++i)
+#define umap unordered_map
+#define uset unordered_set
+
+template<class TIn>
+using indexed_set = tree<
+        TIn, null_type, less<TIn>,
+        rb_tree_tag, tree_order_statistics_node_update>;
+
+void fast() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+}
+
+void file() {
+    auto a = freopen("a.in",  "r", stdin);
+    auto b = freopen("a.out", "w", stdout);
+    if(!a || !b) cout << "uh oh" << endl;
+}
+
+
+
+
+
+void nextpow(ll& n) {
+    n--;
+    n |= n >> 1;
+    n |= n >> 2;
+    n |= n >> 4;
+    n |= n >> 8;
+    n |= n >> 16;
+    n++;
+}
+
+void fft(valarray<complex<double>>& x) {
+    ll s = x.size();
+
+    if(s <= 1) {
+        return;
+    }
+
+    valarray<complex<double>> even = x[slice(0, s/2, 2)];
+    valarray<complex<double>> odd  = x[slice(1, s/2, 2)];
+
+    fft(even);
+    fft(odd);
+
+    for(ll i = 0; i < s/2; i++) {
+        complex<double> t = polar(1.0, -2.0 * M_PI * i / s) * odd[i];
+        x[i]     = even[i] + t;
+        x[i+s/2] = even[i] - t;
+    }
+}
+
+void ifft(valarray<complex<double>>& x) {
+    x = x.apply(conj);
+    fft(x);
+    x = x.apply(conj);
+    x /= x.size();
+}
 
 int main() {
+    //file();
+    //fast();
+
     string s;
     cin >> s;
-    int n = s.size();
 
-    // Initialize the result array
-    vector<int> result(n, 0);
+    ll size = s.size();
+    size++;
+    nextpow(size);
+    size++;
+    nextpow(size);
 
-    // Array to count the number of 'B's before each position
-    vector<int> prefixB(n + 1, 0);
-    
-    // Array to count the number of 'A's after each position
-    vector<int> suffixA(n + 1, 0);
+    valarray<complex<double>> v1(size);
+    valarray<complex<double>> v2(size);
 
-    // Compute prefix count of 'B's
-    for (int i = 0; i < n; ++i) {
-        prefixB[i + 1] = prefixB[i] + (s[i] == 'B');
+    for(ll i = 0; i < s.size(); i++) {
+        v1[i]            = (s[i] - 'A')^1;
+        v2[size - i - 1] = (s[i] - 'A');
     }
 
-    // Compute suffix count of 'A's
-    for (int i = n - 1; i >= 0; --i) {
-        suffixA[i] = suffixA[i + 1] + (s[i] == 'A');
+    fft(v1);
+    fft(v2);
+    for(ll i = 0; i < size; i++) {
+        v1[i] *= v2[i];
     }
+    ifft(v1);
 
-    // Calculate the result for each k
-    for (int k = 1; k < n; ++k) {
-        int count = 0;
-        for (int i = 0; i + k < n; ++i) {
-            if (s[i] == 'B' && s[i + k] == 'A') {
-                count++;
-            }
-        }
-        result[k] = count;
-    }
-
-    // Output the results
-    for (int k = 1; k < n; ++k) {
-        cout << result[k] << endl;
+    for(int i = 0; i < s.size()-1; i++) {
+        cout << (int)(v1[i].real()+.25) << endl;
     }
 
     return 0;
 }
-
