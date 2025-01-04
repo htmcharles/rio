@@ -9,12 +9,12 @@ int main() {
         int n;
         cin >> n;
         if (n == 0) break;
-        
+
         string names[20];
         vector<string> orders[10];
         string menu_items[10];
         int item_count = 0;
-        
+
         for (int i = 0; i < n; i++) {
             string name;
             cin >> name;
@@ -36,7 +36,7 @@ int main() {
                 }
             }
         }
-        
+
         for (int i = 0; i < item_count; i++) {
             sort(orders[i].begin(), orders[i].end());
             cout << menu_items[i] << " ";
@@ -49,4 +49,3 @@ int main() {
     }
     return 0;
 }
-
