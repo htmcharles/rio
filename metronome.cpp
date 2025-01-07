@@ -1,12 +1,12 @@
+
 #include <iostream>
+#include <string>
 
 using namespace std;
 int main (){
-	int a ;
-	cin >>a;
-	
-	cout <<a-1;
+	double a;
+	cin >> a;
+	cout <<a/4;
 	
 	return 0;
 }
-

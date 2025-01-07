@@ -1,12 +1,13 @@
+
 #include <iostream>
+#include <string>
 
 using namespace std;
 int main (){
-	int a ;
-	cin >>a;
+	string s;
+	cin >>s;
 	
-	cout <<a-1;
+	cout << s.length();
 	
 	return 0;
 }
-
