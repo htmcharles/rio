@@ -9,7 +9,6 @@ int main (){
 	
 	if(a%10==0){
 		cout <<"Jebb";
-		break;
 	}
 	cout <<"Neibb";
 	
